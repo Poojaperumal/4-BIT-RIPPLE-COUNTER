@@ -31,35 +31,59 @@ In timing diagram Q0 is changing as soon as the negative edge of clock pulse is 
 
  Developed by: POOJA.P RegisterNumber: 212224100041
 
+```
 
-module Ex12(clk,rst,din,q);
-input clk,rst;
-input din;
-output reg [3:0]q;
-always @(posedge clk)
-begin
-q[0]<=din;
-q[1]<=q[0];
-q[2]<=q[1];
-q[3]<=q[2];
-end
+
+module ex12(
+    input clk,         // Clock input
+    input reset,       // Asynchronous reset
+    output [3:0] q     // 4-bit counter output
+);
+
+    wire clk1, clk2, clk3;
+
+    // First flip-flop toggles with main clock
+    T_FF tff0 (.clk(clk), .reset(reset), .q(q[0]));
+
+    // Subsequent flip-flops toggle with output of previous FF
+    T_FF tff1 (.clk(q[0]), .reset(reset), .q(q[1]));
+    T_FF tff2 (.clk(q[1]), .reset(reset), .q(q[2]));
+    T_FF tff3 (.clk(q[2]), .reset(reset), .q(q[3]));
+
+endmodule
+
+// T Flip-Flop module
+module T_FF (
+    input clk,
+    input reset,
+    output reg q
+);
+    always @(posedge clk or posedge reset)
+    begin
+        if (reset)
+            q <= 0;
+        else
+            q <= ~q;
+    end
 endmodule
 
 
-
-
+```
 
 **RTL LOGIC FOR 4 Bit Ripple Counter**
 
 
-![Screenshot 2025-05-12 092536](https://github.com/user-attachments/assets/11c168aa-7157-42fd-8f9b-b88392532a87)
+
+![Screenshot 2025-05-18 183714](https://github.com/user-attachments/assets/fb774117-6e4c-4d51-93ef-b9314f5930c4)
+
+
 
 
 
 **TIMING DIGRAMS FOR 4 Bit Ripple Counter**
 
 
-![Screenshot 2025-05-12 092712](https://github.com/user-attachments/assets/f8884a98-8ef2-4d9e-9b29-5618fe30abc8)
+![Screenshot 2025-05-18 183858](https://github.com/user-attachments/assets/562eb532-7687-4b83-b25e-9277d2df14a4)
 
 
 
